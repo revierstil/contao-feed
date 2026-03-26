@@ -14,8 +14,8 @@ services:
             - '@twig'
             - '@BoelterIO\EnrichingSerializer\Serializer\Serializer'
             - '@netzmacht.contao_toolkit.assets_manager'
-            - '@netzmacht.contao_toolkit.repository_manager'
             - '%revierstil_contao_feed.uploadPath%'
+            - '@netzmacht.contao_toolkit.repository_manager'
 
     # Kernel
     Revierstil\ContaoFeed\EventListener\Kernel\RequestTokenListener:
