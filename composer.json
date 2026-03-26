@@ -14,9 +14,9 @@
   "require": {
     "php": "^8.1",
     "ext-json": "*",
-    "boelter-io/doctrine-dbal-query-filter": "dev-main as 1.0.0",
-    "boelter-io/enriching-serializer": "dev-main as 1.0.0",
-    "boelter-io/options": "dev-main as 1.0.0",
+    "boelter-io/doctrine-dbal-query-filter": "^1.0",
+    "boelter-io/enriching-serializer": "^1.0",
+    "boelter-io/options": "^1.0",
     "contao-community-alliance/meta-palettes": "^2.1",
     "contao/core-bundle": "^5.7",
     "contao/manager-plugin": "^2.13",
