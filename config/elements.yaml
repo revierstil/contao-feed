@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: true
+
+    Revierstil\ContaoFeed\Controller\Element\FeedListController:
+        arguments:
+            - '@BoelterIO\Options\Model\OptionRepository'
+            - '@translator'
+            - '@router'
+            - '@contao.csrf.token_manager'
+            - '%contao.csrf_token_name%'
+            - '%revierstil_contao_feed.sorting%'

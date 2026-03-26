@@ -1,0 +1,18 @@
+# Composer
+/vendor
+composer.lock
+
+# PHPCQ
+/.phpcq
+.phpcs-cache
+.phpunit.result.cache
+.phpcq.lock
+
+# OSX
+.DS_Store
+
+# IDE
+/.idea
+
+# Node
+node_modules

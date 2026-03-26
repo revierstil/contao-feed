@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: true
+
+    Revierstil\ContaoFeed\Model\FeedRepository:
+        arguments:
+            - '@database_connection'
+            - '@BoelterIO\DoctrineDBALQueryFilter\Query\QueryBuilderFactory'
+        tags:
+            - { name: 'netzmacht.contao_toolkit.repository', model: 'Revierstil\ContaoFeed\Model\FeedModel' }

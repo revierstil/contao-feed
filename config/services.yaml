@@ -1,0 +1,43 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: true
+
+    _instanceof:
+        Symfony\Bundle\FrameworkBundle\Controller\AbstractController:
+            calls:
+                - [ setContainer, [ '@Psr\Container\ContainerInterface' ] ]
+
+    # Api
+    Revierstil\ContaoFeed\Controller\Api\FeedController:
+        arguments:
+            - '@Revierstil\ContaoFeed\Model\FeedRepository'
+            - '@BoelterIO\Options\Model\GroupRepository'
+            - '@BoelterIO\Options\Model\OptionRepository'
+            - '@BoelterIO\EnrichingSerializer\Serializer\Serializer'
+            - '@translator'
+            - '@contao.filesystem.virtual.files'
+            - '%kernel.project_dir%'
+            - '%revierstil_contao_feed.sorting%'
+            - '%revierstil_contao_feed.filter%'
+            - '%revierstil_contao_feed.imageSizes%'
+            - '%revierstil_contao_feed.uploadPath%'
+            - '@contao.framework'
+
+    # Enricher
+    Revierstil\ContaoFeed\Serializer\Enricher\Backend\FeedEnricher:
+        arguments:
+            - '@BoelterIO\EnrichingSerializer\Serializer\Serializer'
+            - '@contao.framework'
+
+    Revierstil\ContaoFeed\Serializer\Enricher\Frontend\FeedEnricher:
+        arguments:
+            - '@BoelterIO\EnrichingSerializer\Serializer\Serializer'
+            - '@contao.image.studio'
+            - '@contao.filesystem.virtual.files'
+            - '@contao.framework'
+
+    Revierstil\ContaoFeed\Serializer\Enricher\Frontend\AuthorEnricher:
+        arguments:
+            - '@contao.image.studio'
+            - '@contao.filesystem.virtual.files'

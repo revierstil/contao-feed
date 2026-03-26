@@ -1,0 +1,23 @@
+.feed-wrapper .meta {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  margin-bottom: 1em;
+  border-bottom: 1px solid var(--border);
+}
+.feed-wrapper .message {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.feed-wrapper .message .text {
+  width: 70%;
+}

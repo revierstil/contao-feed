@@ -1,0 +1,42 @@
+{
+  "name": "feed-list",
+  "version": "0.0.0",
+  "dependencies": {
+    "core-js": "^3.39.0",
+    "pinia": "^2.3.1",
+    "vue": "^3.5.30",
+    "lodash-es": "^4.17.23",
+    "@formkit/addons": "^1.7.2",
+    "@formkit/utils": "^1.7.2",
+    "@formkit/vue": "^1.7.2",
+    "debounce": "^2.2.0",
+    "axios": "^1.13.6",
+    "dayjs": "^1.11.20",
+    "vue-a11y-dialog": "^1.1.2"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.16.1",
+    "@tsconfig/node20": "^20.1.9",
+    "@types/node": "^25.5.0",
+    "@vitejs/plugin-vue": "^6.0.5",
+    "@vue/tsconfig": "^0.9.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.2",
+    "vue-tsc": "^3.2.6",
+    "@types/lodash-es": "^4.17.12",
+    "qs": "^6.15.0"
+  },
+  "browserslist": [
+    "last 2 versions",
+    "ios >= 8"
+  ],
+  "scripts": {
+    "dev": "vite --debug hmr",
+    "watch": "vite build --watch",
+    "build": "run-p type-check build-only",
+    "preview": "vite preview",
+    "build-only": "vite build"
+  }
+}

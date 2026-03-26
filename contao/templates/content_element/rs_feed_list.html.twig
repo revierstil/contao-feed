@@ -1,0 +1,9 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% block content %}
+
+    <div id="rs-feed-list"></div>
+    <script id="rs-feed-list-config" type="application/json">{{ config|json_encode|raw }}</script>
+
+    <script src="{{ asset(assetUrl) }}"></script>
+{% endblock %}

@@ -1,0 +1,9 @@
+boelter_io_options:
+    options:
+        location:
+            label: 'Standort'
+            options:
+                - 'Bad Kreuznach'
+                - 'Breitscheid'
+                - 'Hagen'
+                - 'OWL'

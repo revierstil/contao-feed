@@ -1,0 +1,19 @@
+.feed-wrapper {
+  & .meta {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    margin-bottom: 1em;
+    border-bottom: 1px solid var(--border)
+  }
+
+  & .message {
+    display: flex;
+    justify-content: space-between;
+    
+    & .text {
+      width: 70%
+    }
+  }
+}

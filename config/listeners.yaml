@@ -1,0 +1,29 @@
+services:
+    _defaults:
+        autowire: false
+        autoconfigure: true
+
+    # DataContainer
+    Revierstil\ContaoFeed\EventListener\DataContainer\FeedListener:
+        arguments:
+            - '@netzmacht.contao_toolkit.dca.manager'
+            - '@Revierstil\ContaoFeed\Model\FeedRepository'
+            - '@BoelterIO\Options\Model\OptionRepository'
+            - '@contao.filesystem.virtual.files'
+            - '@Contao\CoreBundle\DataContainer\DcaUrlAnalyzer'
+            - '@twig'
+            - '@BoelterIO\EnrichingSerializer\Serializer\Serializer'
+            - '@netzmacht.contao_toolkit.assets_manager'
+            - '@netzmacht.contao_toolkit.repository_manager'
+            - '%revierstil_contao_feed.uploadPath%'
+
+    # Kernel
+    Revierstil\ContaoFeed\EventListener\Kernel\RequestTokenListener:
+        arguments:
+            - '@contao.csrf.token_manager'
+            - '%contao.csrf_token_name%'
+
+    Revierstil\ContaoFeed\EventListener\Kernel\PermissionListener:
+        arguments:
+            - '@security.helper'
+            - '%revierstil_contao_feed.userGroups%'

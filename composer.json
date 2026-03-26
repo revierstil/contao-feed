@@ -1,0 +1,91 @@
+{
+  "name": "revierstil/contao-feed",
+  "description": "Feed bundle for Contao",
+  "license": "proprietary",
+  "type": "contao-bundle",
+  "authors": [
+    {
+      "name": "Christopher Bölter",
+      "email": "cb@revierstil.de",
+      "homepage": "https://revierstil.de",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": "^8.1",
+    "ext-json": "*",
+    "boelter-io/doctrine-dbal-query-filter": "dev-main as 1.0.0",
+    "boelter-io/enriching-serializer": "dev-main as 1.0.0",
+    "boelter-io/options": "dev-main as 1.0.0",
+    "contao-community-alliance/meta-palettes": "^2.1",
+    "contao/core-bundle": "^5.7",
+    "contao/manager-plugin": "^2.13",
+    "doctrine/annotations": "^2.0",
+    "doctrine/collections": "^2.6",
+    "doctrine/dbal": "^3.10",
+    "nesbot/carbon": "^3.11",
+    "netzmacht/contao-toolkit": "^4.0",
+    "pagerfanta/core": "^4.8",
+    "symfony-cmf/routing": "^3.0",
+    "symfony-cmf/routing-bundle": "^3.1",
+    "symfony/config": "^7.4",
+    "symfony/dependency-injection": "^7.4",
+    "symfony/event-dispatcher": "^7.4",
+    "symfony/filesystem": "^7.4",
+    "symfony/framework-bundle": "^7.4",
+    "symfony/http-foundation": "^7.4",
+    "symfony/http-kernel": "^7.4",
+    "symfony/routing": "^7.4",
+    "symfony/security-bundle": "^7.4",
+    "symfony/security-core": "^7.4",
+    "symfony/security-csrf": "^7.4",
+    "symfony/serializer": "^7.4",
+    "symfony/translation-contracts": "^3.6",
+    "symfony/uid": "^7.4",
+    "symfony/validator": "^7.4",
+    "twig/twig": "^3.24"
+  },
+  "require-dev": {
+    "doctrine/coding-standard": "^13.0",
+    "phpcq/runner-bootstrap": "^1.0@dev",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.2"
+  },
+  "conflict": {
+    "contao/manager-plugin": "<2.0 || >=3.0"
+  },
+  "repositories": {
+    "options": {
+      "type": "path",
+      "url": "../options"
+    },
+    "enriching-serializer": {
+      "type": "path",
+      "url": "../enriching-serializer"
+    },
+    "query-filter": {
+      "type": "path",
+      "url": "../doctrine-dbal-query-filter"
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "Revierstil\\ContaoFeed\\": "src/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/package-versions-deprecated": true,
+      "contao-community-alliance/composer-plugin": true,
+      "contao-components/installer": true,
+      "contao/manager-plugin": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "php-http/discovery": true
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-main": "1.0.x-dev"
+    },
+    "contao-manager-plugin": "Revierstil\\ContaoFeed\\ContaoManager\\Plugin"
+  }
+}

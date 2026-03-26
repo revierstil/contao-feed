@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<div id="rs-feed-list"></div>
+<script type="module" src="src/main.ts"></script>
+<script id="rs-feed-list-config" type="application/json">{
+    "sorting": [
+        {
+            "value": "dateCreated~asc",
+            "label": "rs_feed.sorting.date_created_asc",
+            "default": true
+        },
+        {
+            "value": "dateCreated~desc",
+            "label": "rs_feed.sorting.date_created_desc",
+            "default": false
+        },
+        {
+            "value": "likes~desc",
+            "label": "rs_feed.sorting.date_created_likes",
+            "default": false
+        }
+    ],
+    "filters": {
+        "location": {
+            "label": "Standort",
+            "options": [
+                {
+                    "value": 1, "label": "Bad Kreuznach"
+                },
+                {
+                    "value": 2, "label": "Breitscheid"
+                }
+            ]
+        }
+    },
+    "options": {
+        "location": {
+            "options": [
+                {
+                    "value": 1, "label": "Bad Kreuznach"
+                },
+                {
+                    "value": 2, "label": "Breitscheid"
+                }
+            ]
+        }
+    },
+    "requestToken": "38b549875bf6b0.jb7AbHyrc0_2GqnQ3k6gzuy3qvCLDme0MXx6Czqw-qY.yNv4FDrMQRnHK4SCnRT2hKrd45_aYBSFSRM8Y3Tlz-Xv2vc9HcdLIbdVwg",
+    "urls": {
+        "listing": "\/revierstil\/api\/contao-feed\/list",
+        "create": "\/revierstil\/api\/contao-feed\/create",
+        "like": "\/revierstil\/api\/contao-feed\/like"
+    }
+}</script>

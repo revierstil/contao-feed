@@ -1,0 +1,27 @@
+{% use '@Contao/component/_figure.html.twig' %}
+
+<div class="feed-wrapper">
+    <div class="meta">
+        <div class="author">
+            {% if author is not empty %}
+                {{ author.firstname }} {{ author.lastname }}, {{ author.username }}
+            {% endif %}
+        </div>
+        <div class="date">
+            <span class="likes">{{ 'tl_rs_feed.likes.0'|trans([], 'contao_rs_feed') }}: {{ likes }}</span>
+            {% if dateCreated is not null %}
+                | {{ dateCreated|date('d.m.Y - H:i') }}
+            {% endif %}
+        </div>
+    </div>
+    <div class="message">
+        <div class="text">
+            {{ message }}
+        </div>
+        <div class="image">
+            {% if image is not null %}
+                {% with {figure: figure(image, [100, 100])} %}{{ block('figure_component') }}{% endwith %}
+            {% endif %}
+        </div>
+    </div>
+</div>

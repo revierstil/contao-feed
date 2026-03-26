@@ -1,0 +1,4 @@
+revierstil_contao_feed.api:
+    resource: ../src/Controller/Api/
+    type: attribute
+    prefix: /revierstil/api

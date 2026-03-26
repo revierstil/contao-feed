@@ -1,0 +1,36 @@
+'Revierstil\ContaoFeed\Model\FeedModel':
+    attributes:
+        id:
+            groups: [ 'backend', 'frontend' ]
+        author:
+            groups: [ 'backend', 'frontend' ]
+        location:
+            groups: [ 'backend', 'frontend' ]
+        message:
+            groups: [ 'backend', 'frontend' ]
+        image:
+            groups: [ 'backend', 'frontend' ]
+        dateCreated:
+            groups: [ 'backend', 'frontend' ]
+        likes:
+            groups: [ 'backend', 'frontend' ]
+
+'Contao\MemberModel':
+    attributes:
+        id:
+            groups: [ 'backend', 'frontend' ]
+        firstname:
+            groups: [ 'backend', 'frontend' ]
+        lastname:
+            groups: [ 'backend', 'frontend' ]
+        username:
+            groups: [ 'backend', 'frontend' ]
+        avatar:
+            groups: [ 'frontend' ]
+
+'BoelterIO\Options\Model\OptionModel':
+    attributes:
+        id:
+            groups: [ 'backend', 'frontend', 'option_list' ]
+        title:
+            groups: [ 'backend', 'frontend', 'option_list' ]
