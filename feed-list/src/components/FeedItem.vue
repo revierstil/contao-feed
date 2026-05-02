@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="message">
-      {{ props.item?.message }}
+      <p>{{ props.item?.message }}</p>
       <picture-default v-if="props.item?.image" :img="props.item?.image.picture.img" :sources="props.item?.image.picture.sources" :alt="props.item?.image.alt"></picture-default>
     </div>
   </div>

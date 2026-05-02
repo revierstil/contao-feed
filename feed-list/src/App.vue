@@ -33,15 +33,29 @@
     </button>
   </div>
   <div class="feed-list">
-    <feed-item :item="item" v-for="item in feedStore.feeds" :key="item.id"></feed-item>
-    <pagination v-if="feedStore.pagination && feedStore.pagination.total > 1" :pagination="feedStore.pagination" :current-page="feedStore.currentPage"
-                @change-page="changePage"/>
-    <div class="feed-loading-indicator-overlay" v-if="feedStore.loading || !isInitialized">
+    <feed-item
+      :item="item"
+      v-for="item in feedStore.feeds"
+      :key="item.id"
+    ></feed-item>
+    <pagination
+      v-if="feedStore.pagination && feedStore.pagination.total > 1"
+      :pagination="feedStore.pagination"
+      :current-page="feedStore.currentPage"
+      @change-page="changePage"
+    />
+    <div
+      class="feed-loading-indicator-overlay"
+      v-if="feedStore.loading || !isInitialized"
+    >
       <div class="feed-loading-indicator"></div>
     </div>
   </div>
-  <A11yDialog id="create-dialog" @dialog-ref="assignDialogRef" v-if="isInitialized">
-
+  <A11yDialog
+    id="create-dialog"
+    @dialog-ref="assignDialogRef"
+    v-if="isInitialized"
+  >
     <FormKit
       type="form"
       autocomplete="off"
@@ -59,46 +73,33 @@
         :options="configStore.options.location.options || []"
       >
       </FormKit>
-      <FormKit
-        type="textarea"
-        name="message"
-        label="Nachricht"
-      >
-      </FormKit>
-      <FormKit
-        type="file"
-        name="image"
-        id="image"
-        label="Nachricht"
-      >
-      </FormKit>
-      <FormKit type="submit" label="Speichern"/>
+      <FormKit type="textarea" name="message" label="Nachricht"> </FormKit>
+      <FormKit type="file" name="image" id="image" label="Nachricht"> </FormKit>
+      <FormKit type="submit" label="Speichern" />
     </FormKit>
   </A11yDialog>
 </template>
 
 <script setup lang="ts">
-
-import {storeToRefs} from "pinia";
-import {configStore, feedStore} from "@/stores";
-import {nextTick, onMounted, ref, watch} from "vue";
+import { storeToRefs } from "pinia";
+import { configStore, feedStore } from "@/stores";
+import { nextTick, onMounted, ref, watch } from "vue";
 import FeedItem from "@/components/FeedItem.vue";
 import Pagination from "@/components/partials/Pagination.vue";
-import {schemas} from "@/inputs/schemas.ts";
-import {A11yDialog} from "vue-a11y-dialog";
-import {createFeed} from "@/api";
-import {getNode} from '@formkit/core'
+import { schemas } from "@/inputs/schemas.ts";
+import { A11yDialog } from "vue-a11y-dialog";
+import { createFeed } from "@/api";
+import { getNode } from "@formkit/core";
 import axios from "axios";
-import {setErrors} from "@formkit/vue";
+import { setErrors } from "@formkit/vue";
 
-const {isInitialized} = storeToRefs(configStore);
-const {currentPage, sorting, filters} = storeToRefs(feedStore);
+const { isInitialized } = storeToRefs(configStore);
+const { currentPage, sorting, filters } = storeToRefs(feedStore);
 const dialog = ref(null);
-const createData = ref({})
-
+const createData = ref({});
 
 onMounted(function () {
-  const configElement = document.getElementById("rs-feed-list-config")
+  const configElement = document.getElementById("rs-feed-list-config");
   if (!configElement) {
     console.log("Missing config element");
     return;
@@ -119,7 +120,7 @@ watch(isInitialized, (value) => {
   }
 
   feedStore.loadFeeds();
-})
+});
 
 watch(sorting, (value, oldValue) => {
   if (value === oldValue) {
@@ -129,7 +130,7 @@ watch(sorting, (value, oldValue) => {
   currentPage.value = 1;
 
   feedStore.loadFeeds();
-})
+});
 
 watch(filters, (value, oldValue) => {
   if (value === oldValue) {
@@ -139,26 +140,26 @@ watch(filters, (value, oldValue) => {
   currentPage.value = 1;
 
   feedStore.loadFeeds();
-})
+});
 
 const changePage = (page: number) => {
   currentPage.value = page;
 
   nextTick(() => {
     feedStore.loadFeeds();
-  })
-}
+  });
+};
 
 const locationOptions = () => {
-  if(!feedStore.filterElements.location) {
+  if (!feedStore.filterElements.location) {
     return [];
   }
 
   const options = feedStore.filterElements.location.options;
-  options.unshift({label: "Alle Standorte", value: ""});
+  options.unshift({ label: "Alle Standorte", value: "" });
 
   return options;
-}
+};
 
 const sortingOptions = () => {
   let sortingConfig = configStore.sorting;
@@ -173,39 +174,40 @@ const sortingOptions = () => {
       sorting.value = sortingElement.value;
     }
 
-    options.push({label: sortingElement.label, value: sortingElement.value});
+    options.push({ label: sortingElement.label, value: sortingElement.value });
   });
 
   return options;
-}
+};
 
 async function submitFeed() {
-
   try {
     const response = await createFeed(createData.value);
     await feedStore.loadFeeds(true);
 
-    if (dialog.value) {
-      dialog.value.hide();
-    }
-
     nextTick(() => {
+      if (dialog.value) {
+        dialog.value.hide();
+      }
+
       createData.value = {};
 
-      const file = getNode('image')
-      file?.reset()
+      const file = getNode("image");
+      file?.reset();
 
-      const form = getNode('create-form')
-      form?.reset()
+      const form = getNode("create-form");
+      form?.reset();
     });
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       const data = error.response.data;
 
       if (data.message) {
-        setErrors('create-form', [], data.message.fields)
+        setErrors("create-form", [], data.message.fields);
       } else {
-        alert('Es ist leider ein Fehler aufgetreten, bitte versuchen Sie es erneut.')
+        alert(
+          "Es ist leider ein Fehler aufgetreten, bitte versuchen Sie es erneut.",
+        );
       }
     }
   }
@@ -214,11 +216,11 @@ async function submitFeed() {
 function assignDialogRef(dialogRef) {
   dialog.value = dialogRef;
 
-  dialog.value.$el.addEventListener('show', function (event) {
+  dialog.value.$el.addEventListener("show", function (event) {
     toggleBodyClass();
   });
 
-  dialog.value.$el.addEventListener('hide', function (event) {
+  dialog.value.$el.addEventListener("hide", function (event) {
     toggleBodyClass();
   });
 }
@@ -230,7 +232,7 @@ function openDialog() {
 }
 
 function toggleBodyClass() {
-  let body = document.getElementsByTagName('body');
+  let body = document.getElementsByTagName("body");
 
   if (body.length === 0 || body[0] === undefined) {
     return;
@@ -238,15 +240,13 @@ function toggleBodyClass() {
 
   let bodyItem = body[0];
 
-  if (bodyItem.classList.contains('feed-list-create-open')) {
-    bodyItem.classList.remove('feed-list-create-open');
+  if (bodyItem.classList.contains("feed-list-create-open")) {
+    bodyItem.classList.remove("feed-list-create-open");
     return;
   }
 
-  bodyItem.classList.add('feed-list-create-open');
+  bodyItem.classList.add("feed-list-create-open");
 }
-
 </script>
 
-<style>
-</style>
+<style></style>
