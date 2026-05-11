@@ -5,5 +5,5 @@
     <div id="rs-feed-list"></div>
     <script id="rs-feed-list-config" type="application/json">{{ config|json_encode|raw }}</script>
 
-    <script src="{{ asset(assetUrl) }}"></script>
+    <script type="module" src="{{ asset(assetUrl) }}"></script>
 {% endblock %}
