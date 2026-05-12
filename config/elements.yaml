@@ -9,5 +9,7 @@ services:
             - '@translator'
             - '@router'
             - '@contao.csrf.token_manager'
+            - '@twig'
+            - '@contao.routing.scope_matcher'
             - '%contao.csrf_token_name%'
             - '%revierstil_contao_feed.sorting%'

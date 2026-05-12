@@ -9,6 +9,7 @@ use BoelterIO\Options\Model\OptionRepository;
 use Contao\ContentModel;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\Model\Collection;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 
 #[AsContentElement(type: 'rs_feed_list', category: 'revierstil')]
 final class FeedListController extends AbstractContentElementController
@@ -25,6 +27,8 @@ final class FeedListController extends AbstractContentElementController
         private readonly TranslatorInterface $translator,
         private readonly RouterInterface $router,
         private readonly CsrfTokenManagerInterface $tokenManager,
+        private readonly Environment $twig,
+        private readonly ScopeMatcher $scopeMatcher,
         private readonly string $tokenName,
         private readonly array $sorting,
     ) {
@@ -35,6 +39,13 @@ final class FeedListController extends AbstractContentElementController
      */
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
+        if($this->scopeMatcher->isBackendRequest($request)) {
+            return new Response($this->twig->render(
+                '@RevierstilContaoFeed/Backend/content_wildcard.html.twig',
+                ['type' => $model->type],
+            ));
+        }
+
         $template->set('config', $this->getConfig());
         $template->set('assetUrl', 'bundles/revierstilcontaofeed/feed-list/main.js?v=' . time());
 
