@@ -9,6 +9,7 @@ use BoelterIO\Options\Model\OptionRepository;
 use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Contao\DataContainer;
 use Contao\MemberModel;
 use Netzmacht\Contao\Toolkit\Data\Model\Repository;
 use Netzmacht\Contao\Toolkit\Data\Model\RepositoryManager;
@@ -54,13 +55,13 @@ final class FeedListener
     }
 
     #[AsCallback(table: 'tl_rs_feed', target: 'config.ondelete')]
-    public function onDelete(int $source): void
+    public function onDelete(DataContainer $dataContainer): void
     {
-        if ($this->filesystem->directoryExists(Path::join($this->uploadPath, 'feed-' . $source)) === true) {
+        if ($this->filesystem->directoryExists(Path::join($this->uploadPath, 'feed-' . $dataContainer->id)) === true) {
             return;
         }
 
-        $this->filesystem->createDirectory(Path::join($this->uploadPath, 'feed-' . $source));
+        $this->filesystem->createDirectory(Path::join($this->uploadPath, 'feed-' . $dataContainer->id));
     }
 
     #[AsCallback(table: 'tl_rs_feed', target: 'config.onload')]
