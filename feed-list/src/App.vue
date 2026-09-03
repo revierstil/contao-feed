@@ -17,6 +17,13 @@
           label="Standorte"
         >
         </FormKit>
+        <FormKit
+          type="checkbox"
+          name="author"
+          :sections-schema="schemas.checkbox"
+          label="Meine Beiträge"
+        >
+        </FormKit>
       </FormKit>
       <FormKit
         type="select"
@@ -37,6 +44,7 @@
       :item="item"
       v-for="item in feedStore.feeds"
       :key="item.id"
+      @edit="editItem"
     ></feed-item>
     <pagination
       v-if="feedStore.pagination && feedStore.pagination.total > 1"
@@ -62,7 +70,7 @@
       :actions="false"
       id="create-form"
       name="create_form"
-      class="create_form"
+      :class="isEditMode ? 'edit_form' : 'create_form'"
       v-model="createData"
       @submit="submitFeed()"
     >
@@ -73,9 +81,20 @@
         :options="configStore.options.location.options || []"
       >
       </FormKit>
-      <FormKit type="textarea" name="message" label="Nachricht"> </FormKit>
-      <FormKit type="file" name="image" id="image" label="Nachricht"> </FormKit>
-      <FormKit type="submit" label="Speichern" />
+      <FormKit
+        type="textarea"
+        name="message"
+        label="Nachricht"
+        :maxlength="600"
+        #help="{ value }"
+      >
+        <div class="char-indicator">{{ value?.length ?? 0 }} / 600</div>
+      </FormKit>
+      <FormKit type="file" name="image" id="image" label="Bild"> </FormKit>
+      <FormKit
+        type="submit"
+        :label="isEditMode ? 'Aktualisieren' : 'Speichern'"
+      />
     </FormKit>
   </A11yDialog>
 </template>
@@ -83,12 +102,12 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { configStore, feedStore } from "@/stores";
-import { nextTick, onMounted, ref, watch } from "vue";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
 import FeedItem from "@/components/FeedItem.vue";
 import Pagination from "@/components/partials/Pagination.vue";
 import { schemas } from "@/inputs/schemas.ts";
 import { A11yDialog } from "vue-a11y-dialog";
-import { createFeed } from "@/api";
+import { manageFeed } from "@/api";
 import { getNode } from "@formkit/core";
 import axios from "axios";
 import { setErrors } from "@formkit/vue";
@@ -96,7 +115,9 @@ import { setErrors } from "@formkit/vue";
 const { isInitialized } = storeToRefs(configStore);
 const { currentPage, sorting, filters } = storeToRefs(feedStore);
 const dialog = ref(null);
-const createData = ref({});
+const createData = ref<Record<string, any>>({});
+const editId = ref<number | null>(null);
+const isEditMode = computed(() => editId.value !== null);
 
 onMounted(function () {
   const configElement = document.getElementById("rs-feed-list-config");
@@ -139,6 +160,15 @@ watch(filters, (value, oldValue) => {
 
   currentPage.value = 1;
 
+  if (
+    value.author === true &&
+    value.location !== null &&
+    value.location !== undefined
+  ) {
+    filters.value.location = null;
+    return;
+  }
+
   feedStore.loadFeeds();
 });
 
@@ -180,9 +210,29 @@ const sortingOptions = () => {
   return options;
 };
 
+const editItem = (id: number) => {
+  const item = feedStore.feeds.find((feed: any) => feed.id === id);
+  if (!item) {
+    return;
+  }
+
+  editId.value = id;
+  createData.value = {
+    location: item.location.id ?? null,
+    message: item.message ?? "",
+  };
+
+  openDialog();
+};
+
 async function submitFeed() {
   try {
-    const response = await createFeed(createData.value);
+    if (isEditMode.value && editId.value !== null) {
+      await manageFeed(createData.value, editId.value);
+    } else {
+      await manageFeed(createData.value, null);
+    }
+
     await feedStore.loadFeeds(true);
 
     nextTick(() => {
@@ -190,13 +240,7 @@ async function submitFeed() {
         dialog.value.hide();
       }
 
-      createData.value = {};
-
-      const file = getNode("image");
-      file?.reset();
-
-      const form = getNode("create-form");
-      form?.reset();
+      resetForm();
     });
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -222,6 +266,7 @@ function assignDialogRef(dialogRef) {
 
   dialog.value.$el.addEventListener("hide", function (event) {
     toggleBodyClass();
+    resetForm();
   });
 }
 
@@ -246,6 +291,17 @@ function toggleBodyClass() {
   }
 
   bodyItem.classList.add("feed-list-create-open");
+}
+
+function resetForm() {
+  editId.value = null;
+  createData.value = {};
+
+  const file = getNode("image");
+  file?.reset();
+
+  const form = getNode("create-form");
+  form?.reset();
 }
 </script>
 

@@ -4,50 +4,56 @@
 <script id="rs-feed-list-config" type="application/json">{
     "sorting": [
         {
-            "value": "dateCreated~asc",
-            "label": "rs_feed.sorting.date_created_asc",
+            "value": "dateCreated~desc",
+            "label": "Neu - Alt",
             "default": true
         },
         {
-            "value": "dateCreated~desc",
-            "label": "rs_feed.sorting.date_created_desc",
+            "value": "dateCreated~asc",
+            "label": "Alt - Neu",
             "default": false
         },
         {
-            "value": "likes~desc",
-            "label": "rs_feed.sorting.date_created_likes",
+            "value": "likes~DESC",
+            "label": "Beliebt",
             "default": false
         }
     ],
-    "filters": {
-        "location": {
-            "label": "Standort",
-            "options": [
-                {
-                    "value": 1, "label": "Bad Kreuznach"
-                },
-                {
-                    "value": 2, "label": "Breitscheid"
-                }
-            ]
-        }
-    },
     "options": {
         "location": {
             "options": [
                 {
-                    "value": 1, "label": "Bad Kreuznach"
+                    "label": "Alle Standorte - BSD West",
+                    "value": 8
                 },
                 {
-                    "value": 2, "label": "Breitscheid"
+                    "label": "Bad Kreuznach",
+                    "value": 1
+                },
+                {
+                    "label": "Breitscheid",
+                    "value": 2
+                },
+                {
+                    "label": "Hagen",
+                    "value": 3
+                },
+                {
+                    "label": "M\u00fcnster",
+                    "value": 9
+                },
+                {
+                    "label": "OWL",
+                    "value": 4
                 }
             ]
         }
     },
-    "requestToken": "38b549875bf6b0.jb7AbHyrc0_2GqnQ3k6gzuy3qvCLDme0MXx6Czqw-qY.yNv4FDrMQRnHK4SCnRT2hKrd45_aYBSFSRM8Y3Tlz-Xv2vc9HcdLIbdVwg",
     "urls": {
-        "listing": "\/revierstil\/api\/contao-feed\/list",
-        "create": "\/revierstil\/api\/contao-feed\/create",
-        "like": "\/revierstil\/api\/contao-feed\/like"
-    }
+        "listing": "revierstil\/api\/contao-feed\/list",
+        "manage": "revierstil\/api\/contao-feed\/manage",
+        "like": "revierstil\/api\/contao-feed\/like",
+        "delete": "revierstil\/api\/contao-feed\/delete"
+    },
+    "requestToken": "1becc3246.iFTQpQwl6skEJ3qkpJH0mGcTwZWWx7gALsr8iriA1q0.yz_kkmlJgv5TTiiXkNSh6RBLlPDukNRCF5mZxM7fr_3QMbnuflTHnEd3Mw"
 }</script>

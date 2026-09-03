@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../dataengine/vendor/symfony/dependency-injection/Loader/schema/services.schema.json
 services:
     _defaults:
         autowire: false
@@ -35,6 +36,7 @@ services:
             - '@BoelterIO\EnrichingSerializer\Serializer\Serializer'
             - '@contao.image.studio'
             - '@contao.filesystem.virtual.files'
+            - '@security.token_storage'
             - '@contao.framework'
 
     Revierstil\ContaoFeed\Serializer\Enricher\Frontend\AuthorEnricher:

@@ -1,6 +1,6 @@
 import {acceptHMRUpdate, defineStore} from "pinia";
 import type {FeedsState} from "@/stores/models";
-import {fetchFeed, likeFeed} from "@/api";
+import { fetchFeed, likeFeed, deleteFeed } from "@/api";
 
 
 export const useFeedStore = defineStore("feed", {
@@ -37,6 +37,14 @@ export const useFeedStore = defineStore("feed", {
         async likeFeed(feedId: number): Promise<void> {
             try {
                 await likeFeed(feedId)
+                await this.loadFeeds(true);
+            } catch (error) {
+                alert('Es ist leider ein Fehler aufgetreten, bitte versuchen Sie es erneut.')
+            }
+        },
+        async deleteFeed(feedId: number): Promise<void> {
+            try {
+                await deleteFeed(feedId)
                 await this.loadFeeds(true);
             } catch (error) {
                 alert('Es ist leider ein Fehler aufgetreten, bitte versuchen Sie es erneut.')

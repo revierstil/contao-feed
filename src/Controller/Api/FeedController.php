@@ -72,15 +72,22 @@ final class FeedController extends AbstractController
         $this->config = $framework->getAdapter(Config::class);
     }
 
-    #[Route(path: '/contao-feed/list', name: 'revierstil_contao_feed_api_list', methods: ['GET'])]
+    #[Route(
+        path: '/contao-feed/list',
+        name: 'revierstil_contao_feed_api_list',
+        defaults: ['_scope' => 'frontend'],
+        methods: ['GET'],
+    )]
     public function listing(Request $request): JsonResponse
     {
         $filters         = $request->query->all('filter') ?? [];
-        $validFilterKeys = array_merge(array_column($this->filter, 'optionGroup'), ['sorting']);
+        $validFilterKeys = array_merge(array_column($this->filter, 'optionGroup'), ['sorting', 'author']);
 
         if (array_diff(array_keys($filters), $validFilterKeys) !== []) {
             return new JsonResponse([], Response::HTTP_BAD_REQUEST);
         }
+
+        $filters = $this->adjustFilters($filters);
 
         $defaultSorting = array_filter($this->sorting, fn(array $sorting) => $sorting['default'] === true);
 
@@ -117,12 +124,12 @@ final class FeedController extends AbstractController
     }
 
     #[Route(
-        path: '/contao-feed/create',
-        name: 'revierstil_contao_feed_api_create',
+        path: '/contao-feed/manage',
+        name: 'revierstil_contao_feed_api_manage',
         defaults: ['_scope' => 'frontend'],
         methods: ['POST']
     )]
-    public function create(Request $request): Response
+    public function manage(Request $request): Response
     {
 
         $data = [
@@ -144,14 +151,28 @@ final class FeedController extends AbstractController
             );
         }
 
-        $user              = $this->getUser();
-        $feed              = new FeedModel();
-        $feed->tstamp      = time();
-        $feed->dateCreated = time();
-        $feed->author      = $user instanceof FrontendUser ? $user->id : 2;
-        $feed->location    = $data['location'];
-        $feed->message     = $data['message'];
-        $feed->published   = true;
+        $user = $this->getUser();
+
+        $feed = $this->feeds->find($request->request->getInt('feedId'));
+
+        if ($feed === null && $request->request->getInt('feedId')) {
+            return new Response(null, Response::HTTP_NOT_FOUND);
+        }
+
+        if ($feed !== null && $feed->author !== $this->getUser()?->id) {
+            return new Response(null, Response::HTTP_FORBIDDEN);
+        }
+
+        if ($feed === null) {
+            $feed              = new FeedModel();
+            $feed->dateCreated = time();
+        }
+
+        $feed->tstamp    = time();
+        $feed->author    = $user instanceof FrontendUser ? $user->id : 2;
+        $feed->location  = $data['location'];
+        $feed->message   = $data['message'];
+        $feed->published = true;
         $feed->save();
 
         if ($data['image'] instanceof UploadedFile) {
@@ -208,6 +229,32 @@ final class FeedController extends AbstractController
         );
     }
 
+    #[Route(
+        path: '/contao-feed/delete',
+        name: 'revierstil_contao_feed_api_delete',
+        defaults: ['_scope' => 'frontend'],
+        methods: ['POST']
+    )]
+    public function delete(Request $request): Response
+    {
+        $feed = $this->feeds->find($request->request->getInt('feedId'));
+
+        if ($feed === null) {
+            return new Response(null, Response::HTTP_NOT_FOUND);
+        }
+
+        if ($feed->author !== $this->getUser()?->id) {
+            return new Response(null, Response::HTTP_FORBIDDEN);
+        }
+
+        $feed->delete();
+
+        return new Response(
+            null,
+            Response::HTTP_OK
+        );
+    }
+
     private function prepareViolations(ConstraintViolationListInterface $violations): array
     {
         $result = [];
@@ -223,7 +270,7 @@ final class FeedController extends AbstractController
     private function getEditConstraints(): array
     {
         return [
-            'message'  => [new NotBlank(), new Length(null, 0, 300)],
+            'message'  => [new NotBlank(), new Length(null, 0, 600)],
             'location' => [new NotBlank(), new Choice(choices: $this->getLocationValidationOptions())],
             'image'    => [
                 new File(
@@ -242,14 +289,15 @@ final class FeedController extends AbstractController
         );
     }
 
-    private function prepareFiltersFromConfig(): array {
+    private function prepareFiltersFromConfig(): array
+    {
         $filters = [];
 
         foreach ($this->filter as $filter) {
             $optionGroup = $this->groups->findByFieldName($filter['optionGroup']);
 
             $filters[$filter['optionGroup']] = [
-                'label' => $optionGroup->fieldLabel ?? $optionGroup->fieldName,
+                'label'   => $optionGroup->fieldLabel ?? $optionGroup->fieldName,
                 'options' => $this->getFilterOptions($this->getFilteredOptions($filter['optionGroup'])),
             ];
         }
@@ -284,5 +332,16 @@ final class FeedController extends AbstractController
             fn(OptionModel $option): array => ['label' => $option->title, 'value' => $option->id],
             $options ?? []
         );
+    }
+
+    private function adjustFilters(array $filters): array
+    {
+        if (isset($filters['author']) === false) {
+            return $filters;
+        }
+        $user = $this->getUser();
+
+        $filters['author']['x'] = $user->id ?? 2;
+        return $filters;
     }
 }

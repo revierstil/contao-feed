@@ -77,7 +77,7 @@ $GLOBALS['TL_DCA']['tl_rs_feed'] = [
         ],
         'message'     => [
             'inputType' => 'textarea',
-            'eval'      => ['tl_class' => 'clr', 'mandatory' => true, 'allowHtml' => false, 'maxlength' => 300],
+            'eval'      => ['tl_class' => 'clr', 'mandatory' => true, 'allowHtml' => false, 'maxlength' => 600],
             'sql'       => ['type' => 'text', 'notnull' => false, 'default' => ''],
         ],
         'image'       => [

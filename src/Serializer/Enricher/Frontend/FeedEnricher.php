@@ -13,6 +13,8 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Revierstil\ContaoFeed\Model\FeedModel;
 use Revierstil\ContaoFeed\Serializer\Enricher\Base\AbstractFeedEnricher;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /** @SuppressWarnings(PHPMD.UnusedFormalParameter) */
 #[AsEnricher]
@@ -24,6 +26,7 @@ final class FeedEnricher extends AbstractFeedEnricher implements Enricher
         Serializer $serializer,
         protected Studio $studio,
         protected VirtualFilesystem $filesystem,
+        protected TokenStorageInterface $tokenStorage,
         ContaoFramework $framework
     ) {
         parent::__construct($serializer, $framework);
@@ -46,6 +49,12 @@ final class FeedEnricher extends AbstractFeedEnricher implements Enricher
         if (array_key_exists('image', $normalized)) {
             $this->enrichImage($data, $normalized, $context);
         }
+
+        $token = $this->tokenStorage->getToken();
+        $user  = $token?->getUser();
+
+        $normalized['canDelete'] = $user !== null && $data->author === $user->id;
+        $normalized['canEdit']   = $user !== null && $data->author === $user->id;
 
         return $normalized;
     }

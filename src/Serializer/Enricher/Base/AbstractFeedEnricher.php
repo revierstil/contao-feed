@@ -20,6 +20,8 @@ abstract class AbstractFeedEnricher implements Enricher
     public function __construct(protected readonly Serializer $serializer, ContaoFramework $framework)
     {
         $this->config = $framework->getAdapter(Config::class);
+
+        $framework->initialize();
     }
 
     public function enrich(mixed $data, array $normalized, string $format, array $context = []): array

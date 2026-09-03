@@ -39,7 +39,7 @@ final class FeedListController extends AbstractContentElementController
      */
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        if($this->scopeMatcher->isBackendRequest($request)) {
+        if ($this->scopeMatcher->isBackendRequest($request)) {
             return new Response($this->twig->render(
                 '@RevierstilContaoFeed/Backend/content_wildcard.html.twig',
                 ['type' => $model->type],
@@ -71,8 +71,9 @@ final class FeedListController extends AbstractContentElementController
 
         $config['urls'] = [
             'listing' => $this->router->generate('revierstil_contao_feed_api_list'),
-            'create'  => $this->router->generate('revierstil_contao_feed_api_create'),
+            'manage'  => $this->router->generate('revierstil_contao_feed_api_manage'),
             'like'    => $this->router->generate('revierstil_contao_feed_api_like'),
+            'delete'  => $this->router->generate('revierstil_contao_feed_api_delete'),
         ];
 
         $config['requestToken'] = $this->tokenManager->getToken($this->tokenName)->getValue();
