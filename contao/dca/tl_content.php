@@ -10,7 +10,7 @@ $GLOBALS['TL_DCA']['tl_content']['metapalettes']['rs_feed_list'] = [
     'invisible' => [':hide', 'invisible', 'start', 'stop'],
 ];
 
-$GLOBALS['TL_DCA']['tl_content']['metasubpalettes']['rs_feed_slider'] = ['jumpTo'];
+$GLOBALS['TL_DCA']['tl_content']['metasubpalettes']['rs_feed_enableSlider'] = ['jumpTo'];
 
 // Fields
 $GLOBALS['TL_DCA']['tl_content']['fields']['rs_feed_enableSlider'] = [
