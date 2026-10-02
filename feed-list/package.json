@@ -12,7 +12,8 @@
     "debounce": "^2.2.0",
     "axios": "^1.13.6",
     "dayjs": "^1.11.20",
-    "vue-a11y-dialog": "^1.1.2"
+    "vue-a11y-dialog": "^1.1.2",
+    "swiper":"^14.3.0"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.16.1",

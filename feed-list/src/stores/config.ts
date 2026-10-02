@@ -15,6 +15,8 @@ export const useConfigStore = defineStore("config", {
     options: {},
     requestToken: null,
     initialized: false,
+    mode: "list",
+    listUrl: null,
   }),
   actions: {
     setConfigProperties(config: ConfigModel) {
@@ -29,6 +31,8 @@ export const useConfigStore = defineStore("config", {
       this.options = config.options ?? {};
       this.initialized = true;
       this.requestToken = config.requestToken ?? null;
+      this.mode = config.mode ?? "list";
+      this.listUrl = config.listUrl ?? null;
     },
   },
   getters: {

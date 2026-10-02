@@ -21,39 +21,51 @@
         <span class="like-count" v-html="props.item?.likes"></span>
         <button
           class="like-button"
-          @click.prevent="feedStore.likeFeed(props.item?.id)"
+          @click.stop="feedStore.likeFeed(props.item?.id)"
         ></button>
       </div>
     </div>
     <div class="message">
       <p>{{ props.item?.message }}</p>
+      <button
+        v-if="props.item?.image"
+        class="attachment-button"
+        @click.stop="openDialog"
+      >
+        <picture-default
+          :img="props.item?.image.picture.img"
+          :sources="props.item?.image.picture.sources"
+          :alt="props.item?.image.alt"
+        ></picture-default>
+        <span class="attachment-button-text">Anhang ansehen</span>
+      </button>
+    </div>
+  </div>
+  <A11yDialog
+    :id="`attachment-dialog-${props.item?.id}`"
+    @dialog-ref="assignDialogRef"
+    v-if="props.item?.image"
+  >
+    <template #default>
       <picture-default
         v-if="props.item?.image"
         :img="props.item?.image.picture.img"
         :sources="props.item?.image.picture.sources"
         :alt="props.item?.image.alt"
       ></picture-default>
-    </div>
-    <div class="actions" v-if="props.item?.canEdit || props.item?.canDelete">
-      <button
-        v-if="props.item?.canEdit"
-        class="edit-button"
-        @click.prevent="startEdit"
-      ></button>
-      <button
-        v-if="props.item?.canDelete"
-        class="delete-button"
-        @click.prevent="feedStore.deleteFeed(props.item?.id)"
-      ></button>
-    </div>
-  </div>
+    </template>
+  </A11yDialog>
 </template>
 
 <script setup lang="ts">
 import type { Feed } from "@/stores/models";
 import dayjs from "dayjs";
 import PictureDefault from "@/components/partials/PictureDefault.vue";
-import { feedStore } from "@/stores";
+import { configStore, feedStore } from "@/stores";
+import { A11yDialog } from "vue-a11y-dialog";
+import { ref } from "vue";
+
+const dialog = ref(null);
 
 const props = defineProps({
   item: {
@@ -62,17 +74,45 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits<{
-  (e: "edit", id: number): void;
-}>();
-
 const fromNow = (date: string) => {
   return dayjs(date).fromNow();
 };
 
-const startEdit = () => {
-  if (props.item?.id) emit("edit", props.item.id);
-};
+function assignDialogRef(dialogRef) {
+  dialog.value = dialogRef;
+
+  dialog.value.$el.addEventListener("show", function (event) {
+    toggleBodyClass();
+  });
+
+  dialog.value.$el.addEventListener("hide", function (event) {
+    toggleBodyClass();
+    resetForm();
+  });
+}
+
+function openDialog() {
+  if (dialog.value) {
+    dialog.value.show();
+  }
+}
+
+function toggleBodyClass() {
+  let body = document.getElementsByTagName("body");
+
+  if (body.length === 0 || body[0] === undefined) {
+    return;
+  }
+
+  let bodyItem = body[0];
+
+  if (bodyItem.classList.contains("feed-list-create-open")) {
+    bodyItem.classList.remove("feed-list-create-open");
+    return;
+  }
+
+  bodyItem.classList.add("feed-list-create-open");
+}
 </script>
 
 <style></style>

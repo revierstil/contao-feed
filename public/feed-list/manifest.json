@@ -3,6 +3,9 @@
     "file": "main.js",
     "name": "main",
     "src": "src/main.ts",
-    "isEntry": true
+    "isEntry": true,
+    "css": [
+      "main.css"
+    ]
   }
 }

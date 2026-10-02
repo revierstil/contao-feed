@@ -27,6 +27,8 @@ export interface ConfigModel {
   filters: Filter[] | null;
   options: Record<string, Option[]> | null;
   requestToken: string | null;
+  mode: string;
+  listUrl: string|null;
 }
 
 export interface ConfigState {
@@ -36,6 +38,8 @@ export interface ConfigState {
   options: Record<string, Option[]>;
   initialized: boolean;
   requestToken: string | null;
+  mode: string;
+  listUrl: string|null;
 }
 
 export interface Author {

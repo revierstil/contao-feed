@@ -12,6 +12,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\Model\Collection;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
@@ -46,13 +47,13 @@ final class FeedListController extends AbstractContentElementController
             ));
         }
 
-        $template->set('config', $this->getConfig());
+        $template->set('config', $this->getConfig($model));
         $template->set('assetUrl', 'bundles/revierstilcontaofeed/feed-list/main.js?v=' . time());
 
         return $template->getResponse();
     }
 
-    private function getConfig(): array
+    private function getConfig(ContentModel $model): array
     {
         $config['sorting'] = array_map(
             fn(array $sorting): array => [
@@ -75,6 +76,18 @@ final class FeedListController extends AbstractContentElementController
             'like'    => $this->router->generate('revierstil_contao_feed_api_like'),
             'delete'  => $this->router->generate('revierstil_contao_feed_api_delete'),
         ];
+
+        $config['mode'] = 'list';
+
+        if ($model->rs_feed_enableSlider === true) {
+            try {
+                $config['listUrl'] = $this->router->generate('tl_page.' . $model->jumpTo);
+            } catch (Exception $exception) {
+                $config['listUrl'] = null;
+            }
+
+            $config['mode'] = 'slider';
+        }
 
         $config['requestToken'] = $this->tokenManager->getToken($this->tokenName)->getValue();
         return $config;
