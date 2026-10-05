@@ -17,5 +17,5 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['rs_feed_enableSlider'] = [
     'exclude'   => true,
     'inputType' => 'checkbox',
     'eval'      => ['tl_class' => 'w50', 'submitOnChange' => true],
-    'sql'       => ['type' => 'boolean'],
+    'sql'       => ['type' => 'boolean', 'default' => false],
 ];
