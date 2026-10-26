@@ -4,14 +4,10 @@ import type { AxiosPromise } from "axios";
 import axios from "axios";
 import qs from "qs";
 // @ts-ignore
-import config from "../config";
 import { configStore } from "@/stores";
-import { storeToRefs } from "pinia";
 
-const apiUrl = config.api.baseUrl;
 
 export const api = axios.create({
-  baseURL: apiUrl,
   /*
       headers: {
           "Access-Control-Allow-Origin": "*",

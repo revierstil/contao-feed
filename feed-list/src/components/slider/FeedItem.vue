@@ -66,6 +66,7 @@ import { A11yDialog } from "vue-a11y-dialog";
 import { ref } from "vue";
 
 const dialog = ref(null);
+const dialogShow = ref(false);
 
 const props = defineProps({
   item: {
@@ -87,7 +88,6 @@ function assignDialogRef(dialogRef) {
 
   dialog.value.$el.addEventListener("hide", function (event) {
     toggleBodyClass();
-    resetForm();
   });
 }
 
@@ -106,12 +106,12 @@ function toggleBodyClass() {
 
   let bodyItem = body[0];
 
-  if (bodyItem.classList.contains("feed-list-create-open")) {
-    bodyItem.classList.remove("feed-list-create-open");
+  if (bodyItem.classList.contains("feed-slider-attachment-open")) {
+    bodyItem.classList.remove("feed-slider-attachment-open");
     return;
   }
 
-  bodyItem.classList.add("feed-list-create-open");
+  bodyItem.classList.add("feed-slider-attachment-open");
 }
 </script>
 

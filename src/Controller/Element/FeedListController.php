@@ -15,6 +15,7 @@ use Contao\Model\Collection;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -47,13 +48,13 @@ final class FeedListController extends AbstractContentElementController
             ));
         }
 
-        $template->set('config', $this->getConfig($model));
+        $template->set('config', $this->getConfig($model, $request));
         $template->set('assetUrl', 'bundles/revierstilcontaofeed/feed-list/main.js?v=' . time());
 
         return $template->getResponse();
     }
 
-    private function getConfig(ContentModel $model): array
+    private function getConfig(ContentModel $model, Request $request): array
     {
         $config['sorting'] = array_map(
             fn(array $sorting): array => [
@@ -71,10 +72,14 @@ final class FeedListController extends AbstractContentElementController
         ];
 
         $config['urls'] = [
-            'listing' => $this->router->generate('revierstil_contao_feed_api_list'),
-            'manage'  => $this->router->generate('revierstil_contao_feed_api_manage'),
-            'like'    => $this->router->generate('revierstil_contao_feed_api_like'),
-            'delete'  => $this->router->generate('revierstil_contao_feed_api_delete'),
+            'listing' => $this->router->generate('revierstil_contao_feed_api_list', [],
+                UrlGeneratorInterface::ABSOLUTE_URL),
+            'manage'  => $this->router->generate('revierstil_contao_feed_api_manage', [],
+                UrlGeneratorInterface::ABSOLUTE_URL),
+            'like'    => $this->router->generate('revierstil_contao_feed_api_like', [],
+                UrlGeneratorInterface::ABSOLUTE_URL),
+            'delete'  => $this->router->generate('revierstil_contao_feed_api_delete', [],
+                UrlGeneratorInterface::ABSOLUTE_URL),
         ];
 
         $config['mode'] = 'list';
