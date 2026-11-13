@@ -13,11 +13,13 @@ services:
     Revierstil\ContaoFeed\Controller\Api\FeedController:
         arguments:
             - '@Revierstil\ContaoFeed\Model\FeedRepository'
+            - '@Revierstil\ContaoFeed\Model\FeedLikedRepository'
             - '@BoelterIO\Options\Model\GroupRepository'
             - '@BoelterIO\Options\Model\OptionRepository'
             - '@BoelterIO\EnrichingSerializer\Serializer\Serializer'
             - '@translator'
             - '@contao.filesystem.virtual.files'
+            - '@security.token_storage'
             - '%kernel.project_dir%'
             - '%revierstil_contao_feed.sorting%'
             - '%revierstil_contao_feed.filter%'
@@ -37,6 +39,7 @@ services:
             - '@contao.image.studio'
             - '@contao.filesystem.virtual.files'
             - '@security.token_storage'
+            - '@Revierstil\ContaoFeed\Model\FeedLikedRepository'
             - '@contao.framework'
 
     Revierstil\ContaoFeed\Serializer\Enricher\Frontend\AuthorEnricher:

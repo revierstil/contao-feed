@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Revierstil\ContaoFeed\Model\FeedLikedRepository;
 use Revierstil\ContaoFeed\Model\FeedModel;
 use Revierstil\ContaoFeed\Serializer\Enricher\Base\AbstractFeedEnricher;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -27,6 +28,7 @@ final class FeedEnricher extends AbstractFeedEnricher implements Enricher
         protected Studio $studio,
         protected VirtualFilesystem $filesystem,
         protected TokenStorageInterface $tokenStorage,
+        protected FeedLikedRepository $feedLikes,
         ContaoFramework $framework
     ) {
         parent::__construct($serializer, $framework);
@@ -55,6 +57,8 @@ final class FeedEnricher extends AbstractFeedEnricher implements Enricher
 
         $normalized['canDelete'] = $user !== null && $data->author === $user->id;
         $normalized['canEdit']   = $user !== null && $data->author === $user->id;
+        $normalized['canLike']   = $user !== null && ! $this->feedLikes->findLikeByFeedIdAndMemberId($data->id,
+                $user->id);
 
         return $normalized;
     }

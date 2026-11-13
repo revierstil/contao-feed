@@ -20,6 +20,7 @@
       <div class="like">
         <span class="like-count" v-html="props.item?.likes"></span>
         <button
+            v-if="props.item.canLike"
           class="like-button"
           @click.stop="feedStore.likeFeed(props.item?.id)"
         ></button>

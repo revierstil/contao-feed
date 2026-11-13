@@ -119,6 +119,7 @@ export interface Feed {
   image: Image | null;
   canEdit: boolean;
   canDelete: boolean;
+  canLike: boolean;
 }
 
 export interface FeedsState {

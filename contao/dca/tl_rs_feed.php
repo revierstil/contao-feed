@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Contao\DataContainer;
+use Revierstil\ContaoFeed\Model\FeedLikedModel;
 
 $GLOBALS['TL_DCA']['tl_rs_feed'] = [
 
@@ -11,6 +12,7 @@ $GLOBALS['TL_DCA']['tl_rs_feed'] = [
         'dataContainer'    => Contao\DC_Table::class,
         'switchToEdit'     => true,
         'enableVersioning' => true,
+        'ctable'           => [FeedLikedModel::getTable()],
         'sql'              => [
             'keys' => [
                 'id'       => 'primary',

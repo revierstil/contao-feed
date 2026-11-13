@@ -18,6 +18,8 @@ use Contao\Model\Collection as ContaoCollection;
 use Pagerfanta\Adapter\FixedAdapter;
 use Pagerfanta\Exception\OutOfRangeCurrentPageException;
 use Pagerfanta\Pagerfanta;
+use Revierstil\ContaoFeed\Model\FeedLikedModel;
+use Revierstil\ContaoFeed\Model\FeedLikedRepository;
 use Revierstil\ContaoFeed\Model\FeedModel;
 use Revierstil\ContaoFeed\Model\FeedRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,6 +30,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\File;
@@ -50,11 +53,13 @@ final class FeedController extends AbstractController
      */
     public function __construct(
         private readonly FeedRepository $feeds,
+        private readonly FeedLikedRepository $feedLikes,
         private readonly GroupRepository $groups,
         private readonly OptionRepository $options,
         private readonly Serializer $serializer,
         private readonly TranslatorInterface $translator,
         private readonly VirtualFilesystem $filesystem,
+        private readonly TokenStorageInterface $tokenStorage,
         private readonly string $kernelProjectDir,
         private readonly array $sorting,
         private readonly array $filter,
@@ -131,7 +136,6 @@ final class FeedController extends AbstractController
     )]
     public function manage(Request $request): Response
     {
-
         $data = [
             'message'  => $request->request->get('message'),
             'location' => $request->request->get('location'),
@@ -215,6 +219,19 @@ final class FeedController extends AbstractController
     )]
     public function like(Request $request): Response
     {
+        $token = $this->tokenStorage->getToken();
+        $user  = $token?->getUser();
+
+        if ($user === null) {
+            return new Response(null, Response::HTTP_UNAUTHORIZED);
+        }
+
+        $liked = $this->feedLikes->findLikeByFeedIdAndMemberId($request->request->getInt('feedId'), $user->id);
+
+        if ($liked !== null) {
+            return new Response(null, Response::HTTP_BAD_REQUEST);
+        }
+
         $feed = $this->feeds->find($request->request->getInt('feedId'));
 
         if ($feed === null) {
@@ -222,6 +239,13 @@ final class FeedController extends AbstractController
         }
 
         $this->feeds->updateLikesForFeed($feed->id);
+
+        $feedLiked         = new FeedLikedModel();
+        $feedLiked->tstamp = time();
+        $feedLiked->pid    = $feed->id;
+        $feedLiked->member = $user->id;
+
+        $feedLiked->save();
 
         return new Response(
             null,

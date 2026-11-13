@@ -9,3 +9,10 @@ services:
             - '@BoelterIO\DoctrineDBALQueryFilter\Query\QueryBuilderFactory'
         tags:
             - { name: 'netzmacht.contao_toolkit.repository', model: 'Revierstil\ContaoFeed\Model\FeedModel' }
+
+    Revierstil\ContaoFeed\Model\FeedLikedRepository:
+        arguments:
+            - '@database_connection'
+            - '@BoelterIO\DoctrineDBALQueryFilter\Query\QueryBuilderFactory'
+        tags:
+            - { name: 'netzmacht.contao_toolkit.repository', model: 'Revierstil\ContaoFeed\Model\FeedLikedModel' }
