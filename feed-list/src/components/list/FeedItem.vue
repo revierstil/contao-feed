@@ -20,8 +20,8 @@
       <div class="like">
         <span class="like-count" v-html="props.item?.likes"></span>
         <button
-            v-if="props.item.canLike"
-          class="like-button"
+          :disabled="!props.item.canLike"
+          :class="buttonClasses"
           @click.stop="feedStore.likeFeed(props.item?.id)"
         ></button>
       </div>
@@ -55,6 +55,7 @@ import type { Feed } from "@/stores/models";
 import dayjs from "dayjs";
 import PictureDefault from "@/components/partials/PictureDefault.vue";
 import { feedStore } from "@/stores";
+import { computed } from "vue";
 
 const props = defineProps({
   item: {
@@ -66,6 +67,16 @@ const props = defineProps({
 const emit = defineEmits<{
   (e: "edit", id: number): void;
 }>();
+
+const buttonClasses = computed(() => {
+  let classes = ['like-button'];
+
+  if(!props.item.canLike) {
+      classes.push('is-liked');
+  }
+
+  return classes.join(' ');
+});
 
 const fromNow = (date: string) => {
   return dayjs(date).fromNow();
