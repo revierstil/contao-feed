@@ -20,7 +20,8 @@
       <div class="like">
         <span class="like-count" v-html="props.item?.likes"></span>
         <button
-          class="like-button"
+          :disabled="!props.item.canLike"
+          :class="buttonClasses"
           @click.stop="feedStore.likeFeed(props.item?.id)"
         ></button>
       </div>
@@ -63,7 +64,7 @@ import dayjs from "dayjs";
 import PictureDefault from "@/components/partials/PictureDefault.vue";
 import { configStore, feedStore } from "@/stores";
 import { A11yDialog } from "vue-a11y-dialog";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 const dialog = ref(null);
 const dialogShow = ref(false);
@@ -113,6 +114,16 @@ function toggleBodyClass() {
 
   bodyItem.classList.add("feed-slider-attachment-open");
 }
+
+const buttonClasses = computed(() => {
+  let classes = ["like-button"];
+
+  if (!props.item.canLike) {
+    classes.push("is-liked");
+  }
+
+  return classes.join(" ");
+});
 </script>
 
 <style></style>
